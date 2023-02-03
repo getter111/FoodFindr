@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang = "en-us">
+    <head>
+        <title>FoodFindr</title>
+        <style>
+            body {
+                background-image: ur('background.jpg')
+            }
+            h1 {color: rgb(110, 32, 110);}
+            
+        </style>
+         
+    </head>
+    <body>
+        <img src="logoo.jpg" style="width:243px;height:400px;">
+        <h1>FoodFindr Mainpage</h1>
+        <h2>Dining Halls</h1>
+        <h4>About: Find which Clemson dining hall is the best choice according to your preferences! </h4>
+    </body>  
+    <form id = "foodfindr">
+        <label>Options favor the closest distance</label><br>
+        <label>Please make sure every option is selected before submitting</label><br><br>
+        <label>Location: </label><br>
+        <div class="dropdown">
+            <select name="location" id="location">
+                 <option value="west">West Campus</option>
+                 <option value="east">East Campus</option>
+                 <option value="walkfar" SELECTED>No Preference</option>
+            </select><br><br>
+        </div>
+        
+        <div>
+            <label>Allergies: </label><br>
+            <input type="checkbox" id="nuts" name="option1" value="nuts">
+            <label for="nuts"> Tree Nuts</label><br>
+            <input type="checkbox" id="dairy" name="option2" value="dairy">
+            <label for="dairy"> Dairy</label><br>
+            <input type="checkbox" id="seafood" name="option3" value="seafood">
+            <label for="seafood"> Seafood</label><br>
+            <input type="checkbox" id="gluten" name="option4" value="gluten">
+            <label for="gluten"> Gluten</label><br><br>
+            </div>
+        </div>
+
+        <div>
+            <label>Meal Time: </label><br>
+            <input type="radio" id="breakfast" name="meal_time" value="breakfast" onclick="hideElement()">
+            <label for="breakfast">Breakfast </label>
+            <input type="radio" id="lunch" name="meal_time" value="lunch" onclick="showElement()">
+            <label for="lunch">Lunch </label>
+            <input type="radio" id="dinner" name="meal_time" value="dinner" onclick="showElement()">
+            <label for="dinner">Dinner </label>
+        </select><br><br>
+        </div>
+
+        <div class="myDIV" style="display:none;">
+            <label>Food Preference: </label><br>
+            <input type="checkbox" id="pasta" name="option1" value="pasta">
+            <label for="pasta"> Pasta</label><br>
+            <input type="checkbox" id="hamburger" name="option2" value="hamburger">
+            <label for="hamburger"> Hamburger</label><br>
+            <input type="checkbox" id="pizza" name="option3" value="pizza">
+            <label for="pizza"> Pizza</label><br>
+            <input type="checkbox" id="chicken" name="option4" value="chicken">
+            <label for="chicken"> Chicken</label><br><br>
+        </div>
+
+        <div>
+            <label>Dietary Restriction: </label><br>
+            <select name="Diet" id="Diet">
+                <option value="vegan">Vegan</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="pes">Pescatarian</option>
+                <option value="none" SELECTED>No Preference </option><br>
+            </select><br><br>
+        </div>
+
+        <button type="button" onClick="Submit()">Submit</button>
+
+    </form>
+    <h1 id='answer'></h1>
+</html>
+
+<script>
+    function popUp(){
+        var popUp = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+    }
+    var test1 = 0;
+    var index1 = 0;
+    var test2 = 0;
+    var index2;
+    var test3 = 0;
+    var index3;
+    var answer;
+    var restaurantOptions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let restaurantNames = ['Schilletter', 'McAllister', 'Douthit', 'Chick-Fil-A', 'Starbucks', 'Panda Express', 'Raising Canes', 'Freshens', 'Which-Which', 'Twisted Taco', 'Peppinos', 'Subway', 'Einstein Bagels'];
+   
+    function Submit(){
+        console.log("HI")
+        var locationDOM = document.getElementById('location');
+        var walkingDOM = document.getElementById('distance');
+        var calorieDOM= document.getElementById('calories');
+        var timeDOM = document.getElementsByName('meal_time');
+        var pastaDOM = document.getElementById('pasta');
+        var hamburgerDOM = document.getElementById('hamburger');
+        var pizzaDOM = document.getElementById('pizza');
+        var chickenDOM = document.getElementById('chicken');
+        var nutAllergyDOM = document.getElementById('nuts');
+        var dairyAllergyDOM = document.getElementById('dairy');
+        var seafoodAllergyDOM = document.getElementById('seafood');
+        var glutenAllergyDOM = document.getElementById('gluten');
+        var dietRestrictionDOM = document.getElementById('Diet');
+        const form = document.querySelector('foodfindr');
+    
+    
+    var westDistance = {
+        "Schilletter": 11,
+       "McAllister": 1,
+        "Douthit": 13,
+       "Chick-Fil-A": 3,
+      "Starbucks": 1,
+        "Panda-Express" : 11,
+       "Raising-Canes" : 1,
+        "Freshens": 13,
+        "Which-Which": 1,
+        "Twisted-Taco" : 1,
+      "Peppinos" : 11,
+        "Subway": 12,
+        "Einstein-Bagels" : 12,
+    }
+
+    // Object.entries(westDistance).forEach((entry) => {
+    //     const [key, value] = entry;
+    //     console.log(`${key}: ${value}`);
+    // });
+
+
+    
+    var eastDistance = {
+        "Schilletter": 6,
+       "McAllister": 7,
+        "Douthit": 9,
+       "Chick-Fil-A": 6,
+      "Starbucks": 6,
+        "Panda-Express" : 6,
+       "Raising-Canes" : 7,
+        "Freshens": 9,
+        "Which-Which": 7,
+        "Twisted-Taco" : 7,
+      "Peppinos" : 5,
+        "Subway": 6,
+        "Einstein-Bagels" : 6,
+    }
+    
+    if(locationDOM == "west"){
+        var minDistanceW = westDistance.Schiletter;
+        if(timeDOM == "breakfast"){
+            restaurantOptions[0] += 10;
+            restaurantOptions[1] += 10;
+            restaurantOptions[2] -= 10;
+            restaurantOptions[3] += 10;
+            restaurantOptions[4] += 20;
+            restaurantOptions[5] -= 10;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[7] += 20;
+            restaurantOptions[8] -= 10;
+            restaurantOptions[9] -= 10;
+            restaurantOptions[10] -= 10;
+            restaurantOptions[11] -= 10;
+            restaurantOptions[12] += 20;
+            var p = westDistance;
+           for (var key in p){
+               if(p.hasOwnProperty(key)){
+                   if(p < 4){
+                        restaurantOptions[p] += 20;
+                   }
+                   else if(p > 4 && p < 10){
+                       restaurantOptions[p] += 10;
+                   }
+                   else if(p < 15){
+                       restaurantOptions[p] += 0;
+                   }
+                   //console.log(key +"->"+p[key]);
+               }
+           }
+           if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+           }
+           if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+           }
+           if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+           }
+           if(glutenAllergyDOM.checked){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[8] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] -= 30;
+           }
+           if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+        }
+        else if(timeDom == 'lunch'){
+            var p = westDistance;
+           for (var key in p){
+               if(p.hasOwnProperty(key)){
+                   if(p < 4){
+                        restaurantOptions[p] += 20;
+                   }
+                   else if(p > 4 && p < 10){
+                       restaurantOptions[p] += 10;
+                   }
+                   else if(p < 15){
+                       restaurantOptions[p] += 0;
+                   }
+                   //console.log(key +"->"+p[key]);
+               }
+           }
+           if(chickenDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] += 20;
+                restaurantOptions[4] -+ 10;
+                restaurantOptions[5] += 20;
+                restaurantOptions[6] += 20;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+            /*kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: yes
+               Starbucks: no
+               Panda Express: yes
+               Raising Canes: yes
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+               */
+           }
+           else if(hamburgerDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] += 20;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] += 20;
+                restaurantOptions[12] -= 10;
+                /*Hamburger
+                kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: yes
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: yes
+               Einstein Bagels: no
+                */
+           }
+           else if(pastaDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                /*pasta
+                Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+              */
+           }
+           else if(pizzaDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] += 20;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                /*Pizza
+                Schilletter : yes
+               McAllister: kinda
+               Douthit: yes
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: yes
+               Subway: no
+               Einstein Bagels: no
+               */
+           }
+           if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+           }
+           if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+           }
+           if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+           }
+           if(glutenAllergyDOM.checked){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[8] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] -= 30;
+           }
+           if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+        }
+        else if(timeDom == 'dinner'){
+            var p = westDistance;
+           for (var key in p){
+               if(p.hasOwnProperty(key)){
+                   if(p < 4){
+                        restaurantOptions[p] += 20;
+                   }
+                   else if(p > 4 && p < 10){
+                       restaurantOptions[p] += 10;
+                   }
+                   else if(p < 15){
+                       restaurantOptions[p] += 0;
+                   }
+                   //console.log(key +"->"+p[key]);
+               }
+           }
+           if(chickenDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] += 20;
+                restaurantOptions[4] -+ 10;
+                restaurantOptions[5] += 20;
+                restaurantOptions[6] += 20;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+            /*kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: yes
+               Starbucks: no
+               Panda Express: yes
+               Raising Canes: yes
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+               */
+           }
+           else if(hamburgerDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] += 20;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] += 20;
+                restaurantOptions[12] -= 10;
+                /*Hamburger
+                kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: yes
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: yes
+               Einstein Bagels: no
+                */
+           }
+           else if(pastaDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                /*pasta
+                Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+              */
+           }
+           else if(pizzaDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] += 20;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                /*Pizza
+                Schilletter : yes
+               McAllister: kinda
+               Douthit: yes
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: yes
+               Subway: no
+               Einstein Bagels: no
+               */
+           }
+           if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+           }
+           if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+           }
+           if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+           }
+           if(glutenAllergyDOM.checked){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[8] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] -= 30;
+           }
+           if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+        }
+    }
+    if(locationDOM == "east"){
+        var minDistanceE = eastDistance.Schilitter;
+        var w = eastDistance;
+        if(timeDOM == 'breakfast'){
+            for (var key in w){
+               if(w.hasOwnProperty(key)){
+                   if(w < 4){
+                       restaurantOptions[w] += 20;
+                   }
+                   else if(w > 4 && w < 10){
+                       restaurantOptions[w] += 10;
+                   }
+                   else if(w < 15){
+                       restaurantOptions[w] += 0;
+                   }
+                
+               }
+           }
+            restaurantOptions[0] += 10;
+            restaurantOptions[1] += 10;
+            restaurantOptions[2] -= 10;
+            restaurantOptions[3] += 10;
+            restaurantOptions[4] += 20;
+            restaurantOptions[5] -= 10;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[7] += 20;
+            restaurantOptions[8] -= 10;
+            restaurantOptions[9] -= 10;
+            restaurantOptions[10] -= 10;
+            restaurantOptions[11] -= 10;
+            restaurantOptions[12] += 20;
+            if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+            }
+            else if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+            }
+            else if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+            }
+            else if(glutenAllergyDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 20;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 30;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[8] -= 30;
+                restaurantOptions[10] -= 30;
+                restaurantOptions[12] -= 30;
+            }
+            if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           
+        /*
+        kinda = +10
+        no = -10
+        ya = +20
+        "Schilletter" : kinda
+        "McAllister" : kinda
+        "Douthit" : no
+        "Chick-Fil-A" : kinda
+        "Starbucks" : ya
+        "Panda-Express" : no
+        "Raising-Canes" : no
+        "Freshens" : ya
+        "Which-Which" : no
+        "Twisted-Taco" : no
+        "Peppinos" : no
+        "Subway" : no
+        "Einstein-Bagels : ya*/
+        }
+        else if(timeDOM == 'lunch'){
+            for (var key in w){
+                if(w.hasOwnProperty(key)){
+                   if(w < 4){
+                       restaurantOptions[w] += 20;
+                   }
+                   else if(w > 4 && w < 10){
+                       restaurantOptions[w] += 10;
+                   }
+                   else if(w < 15){
+                       restaurantOptions[w] += 0;
+                   }
+                   
+               }
+           }
+            if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+            }
+            else if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+            }
+            else if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+            }
+            else if(glutenAllergyDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 20;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 30;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[8] -= 30;
+                restaurantOptions[10] -= 30;
+                restaurantOptions[12] -= 30;
+            }
+                if(chickenDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] += 20;
+                restaurantOptions[4] -+ 10;
+                restaurantOptions[5] += 20;
+                restaurantOptions[6] += 20;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                }
+               else if(hamburgerDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] += 20;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] += 20;
+                restaurantOptions[12] -= 10;
+                    /*Hamburger
+                kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: yes
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: yes
+               Einstein Bagels: no
+                */
+               }
+               else if(pizzaDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] += 20;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+               }
+               /*Pizza
+                 Schilletter : yes
+               McAllister: kinda
+               Douthit: yes
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: yes
+               Subway: no
+               Einstein Bagels: no
+               */
+              else if(pastaDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+              }
+              /*pasta
+                Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+              */
+              if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+               
+        }
+        else if(timeDOM == 'dinner'){
+            for (var key in w){
+                if(w.hasOwnProperty(key)){
+                   if(w < 4){
+                       restaurantOptions[w] += 20;
+                   }
+                   else if(w > 4 && w < 10){
+                       restaurantOptions[w] += 10;
+                   }
+                   else if(w < 15){
+                       restaurantOptions[w] += 0;
+                   }
+                   
+               }
+           }
+            if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+            }
+            else if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+            }
+            else if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+            }
+            else if(glutenAllergyDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 20;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 30;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[8] -= 30;
+                restaurantOptions[10] -= 30;
+                restaurantOptions[12] -= 30;
+            }
+            if(chickenDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] += 20;
+                restaurantOptions[4] -+ 10;
+                restaurantOptions[5] += 20;
+                restaurantOptions[6] += 20;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                }
+            else if(pastaDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+              }
+              else if(pizzaDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] += 20;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+               }
+               else if(hamburgerDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] += 20;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] += 20;
+                restaurantOptions[12] -= 10;
+               }
+               if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+               
+        }
+    }
+    if(locationDOM == "walkfar"){
+        if(timeDOM == 'breakfast'){
+            restaurantOptions[0] += 10;
+            restaurantOptions[1] += 10;
+            restaurantOptions[2] -= 10;
+            restaurantOptions[3] += 10;
+            restaurantOptions[4] += 20;
+            restaurantOptions[5] -= 10;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[7] += 20;
+            restaurantOptions[8] -= 10;
+            restaurantOptions[9] -= 10;
+            restaurantOptions[10] -= 10;
+            restaurantOptions[11] -= 10;
+            restaurantOptions[12] += 20;
+        }
+        else if(timeDOM == 'lunch'){
+            if(chickenDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] += 20;
+                restaurantOptions[4] -+ 10;
+                restaurantOptions[5] += 20;
+                restaurantOptions[6] += 20;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+            /*kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: yes
+               Starbucks: no
+               Panda Express: yes
+               Raising Canes: yes
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+               */
+           }
+           else if(hamburgerDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] += 20;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] += 20;
+                restaurantOptions[12] -= 10;
+                /*Hamburger
+                kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: yes
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: yes
+               Einstein Bagels: no
+                */
+           }
+           else if(pastaDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                /*pasta
+                Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+              */
+           }
+           else if(pizzaDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] += 20;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                /*Pizza
+                Schilletter : yes
+               McAllister: kinda
+               Douthit: yes
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: yes
+               Subway: no
+               Einstein Bagels: no
+               */
+           }
+           if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+           }
+           if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+           }
+           if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+           }
+           if(glutenAllergyDOM.checked){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[8] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] -= 30;
+           }
+           if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+        }
+    }
+    if(locationDOM == "east"){
+        var minDistanceE = eastDistance.Schilitter;
+        var w = eastDistance;
+        if(timeDOM == 'breakfast'){
+            for (var key in w){
+               if(w.hasOwnProperty(key)){
+                   if(w < 4){
+                       restaurantOptions[w] += 20;
+                   }
+                   else if(w > 4 && w < 10){
+                       restaurantOptions[w] += 10;
+                   }
+                   else if(w < 15){
+                       restaurantOptions[w] += 0;
+                   }
+                   
+               }
+           }
+            restaurantOptions[0] += 10;
+            restaurantOptions[1] += 10;
+            restaurantOptions[2] -= 10;
+            restaurantOptions[3] += 10;
+            restaurantOptions[4] += 20;
+            restaurantOptions[5] -= 10;
+            restaurantOptions[6] -= 10;
+            restaurantOptions[7] += 20;
+            restaurantOptions[8] -= 10;
+            restaurantOptions[9] -= 10;
+            restaurantOptions[10] -= 10;
+            restaurantOptions[11] -= 10;
+            restaurantOptions[12] += 20;
+            if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+            }
+            else if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+            }
+            else if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+            }
+            else if(glutenAllergyDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 20;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 30;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[8] -= 30;
+                restaurantOptions[10] -= 30;
+                restaurantOptions[12] -= 30;
+            }
+            if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           
+        /*
+        kinda = +10
+        no = -10
+        ya = +20
+        "Schilletter" : kinda
+        "McAllister" : kinda
+        "Douthit" : no
+        "Chick-Fil-A" : kinda
+        "Starbucks" : ya
+        "Panda-Express" : no
+        "Raising-Canes" : no
+        "Freshens" : ya
+        "Which-Which" : no
+        "Twisted-Taco" : no
+        "Peppinos" : no
+        "Subway" : no
+        "Einstein-Bagels : ya*/
+        }
+        else if(timeDOM == 'lunch'){
+            for (var key in w){
+                if(w.hasOwnProperty(key)){
+                   if(w < 4){
+                       restaurantOptions[w] += 20;
+                   }
+                   else if(w > 4 && w < 10){
+                       restaurantOptions[w] += 10;
+                   }
+                   else if(w < 15){
+                       restaurantOptions[w] += 0;
+                   }
+                   
+               }
+           }
+            if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+            }
+            else if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+            }
+            else if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+            }
+            else if(glutenAllergyDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 20;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 30;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[8] -= 30;
+                restaurantOptions[10] -= 30;
+                restaurantOptions[12] -= 30;
+            }
+                if(chickenDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] += 20;
+                restaurantOptions[4] -+ 10;
+                restaurantOptions[5] += 20;
+                restaurantOptions[6] += 20;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                }
+               else if(hamburgerDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] += 20;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] += 20;
+                restaurantOptions[12] -= 10;
+                    /*Hamburger
+                kinda = +10
+                no = -10
+                yes = +20
+               Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: yes
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: yes
+               Einstein Bagels: no
+                */
+               }
+               else if(pizzaDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] += 20;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+               }
+               /*Pizza
+                 Schilletter : yes
+               McAllister: kinda
+               Douthit: yes
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: yes
+               Subway: no
+               Einstein Bagels: no
+               */
+              else if(pastaDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+              }
+              /*pasta
+                Schilletter : kinda
+               McAllister: kinda
+               Douthit: kinda
+               Chick-Fil-A: no
+               Starbucks: no
+               Panda Express: no
+               Raising Canes: no
+               Freshens: no
+               Which-Which: no
+               Twisted-Taco: no
+               Peppino's: no
+               Subway: no
+               Einstein Bagels: no
+              */
+              if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+        }
+        else if(timeDOM == 'dinner'){
+            if(nutAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[3] -= 30;
+            }
+            else if(dairyAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+               restaurantOptions[10] -= 30;
+            }
+            else if(seafoodAllergyDOM.checked){
+               restaurantOptions[0] += 20;
+               restaurantOptions[1] += 20;
+               restaurantOptions[2] += 20;
+            }
+            else if(glutenAllergyDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 20;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 30;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[8] -= 30;
+                restaurantOptions[10] -= 30;
+                restaurantOptions[12] -= 30;
+            }
+            if(chickenDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] += 20;
+                restaurantOptions[4] -+ 10;
+                restaurantOptions[5] += 20;
+                restaurantOptions[6] += 20;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+                }
+            else if(pastaDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+              }
+            else if(pizzaDOM.checked){
+                restaurantOptions[0] += 20;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 20;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] -= 10;
+                restaurantOptions[10] += 20;
+                restaurantOptions[11] -= 10;
+                restaurantOptions[12] -= 10;
+               }
+            else if(hamburgerDOM.checked){
+                restaurantOptions[0] += 10;
+                restaurantOptions[1] += 10;
+                restaurantOptions[2] += 10;
+                restaurantOptions[3] -= 10;
+                restaurantOptions[4] -= 10;
+                restaurantOptions[5] -= 10;
+                restaurantOptions[6] -= 10;
+                restaurantOptions[7] -= 10;
+                restaurantOptions[8] -= 10;
+                restaurantOptions[9] += 20;
+                restaurantOptions[10] -= 10;
+                restaurantOptions[11] += 20;
+                restaurantOptions[12] -= 10;
+               }
+            if(dietRestrictionDOM == 'vegan'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[5] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[10] -= 30;
+            restaurantOptions[12] += 20;
+           }
+           if(dietRestrictionDOM == 'vegeterian'){
+            restaurantOptions[0] += 20;
+            restaurantOptions[1] += 20;
+            restaurantOptions[2] += 20;
+            restaurantOptions[3] -= 30;
+            restaurantOptions[6] -= 30;
+            restaurantOptions[7] += 20;
+            restaurantOptions[9] -= 30;
+            restaurantOptions[12] += 20;
+           }
+               
+        }
+    }
+    console.log(restaurantOptions);
+    console.log("hi");
+    tally(restaurantOptions);
+    const result = document.createElement('p')
+    result.innerHTML = restaurantNames[index1]
+    console.log(index1, index2, index3);
+    answer = restaurantNames[index1]
+    console.log(restaurantNames[index2])
+    document.getElementById('answer').innerHTML = restaurantNames[index2];
+}
+
+        function tally(restaurantOptions){
+            for(var i = 0; i < restaurantOptions.length; ++i){
+                if (restaurantOptions[i] > test1)
+                {
+                    test1 = restaurantOptions[i];
+                    index1 = i;
+                }
+            }
+            restaurantOptions[index1] = 0;
+            for(var i = 0; i < restaurantOptions.length; ++i){
+                if (restaurantOptions[i] > test2 && restaurantOptions[i] < test1)
+                {
+                    test2 = restaurantOptions[i];
+                    index2 = i;
+                }
+                else if (restaurantOptions[i] == test1)
+                {
+                    test2 = restaurantOptions[i];
+                    index2 = i;
+                }
+            }
+            restaurantOptions[index2] = 0;
+            for(var i = 0; i < restaurantOptions.length; ++i){
+                if (restaurantOptions[i] > test3 && restaurantOptions[i] < test2)
+                {
+                    test3 = restaurantOptions[i];
+                    index3 = i;
+                }
+                else if (restaurantOptions[i] == test2)
+                {
+                    test3 = restaurantOptions[i];
+                    index3 = i;
+                }
+            restaurantOptions[index3] = 0;
+            }
+        }
+
+    
+            function showElement()
+            {
+                var food = document.querySelector('.myDIV');
+                
+                 food.style.display = 'block';
+                
+              
+            }
+            
+            function hideElement()
+            {
+                var food = document.querySelector('.myDIV');
+                
+                 food.style.display = 'none';
+                
+              
+            }
+        
+</script>
